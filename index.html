@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WDevelop 3D - No-Code Editor</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.babylonjs.com/babylon.js"></script>
+    <script src="https://cdn.babylonjs.com/loaders/babylonjs.loaders.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div id="app">
+        <header class="topbar">
+            <div class="logo"><i class="fa-solid fa-cube"></i> WDevelop 3D</div>
+            <div class="tabs">
+                <div class="tab" id="tab-scene"><i class="fa-solid fa-cube"></i> Scene</div>
+                <div class="tab" id="tab-events"><i class="fa-solid fa-code"></i> Events</div>
+                <div class="tab" id="tab-settings"><i class="fa-solid fa-gear"></i> Settings</div>
+                <div class="tab" id="tab-extensions"><i class="fa-solid fa-puzzle-piece"></i> Extensions</div>
+            </div>    
+                <div class="tools-bar" id="tools-bar">
+                    <button id="tool-move" class="tool-btn active" title="Move (1)"><i class="fa-solid fa-arrows-up-down-left-right"></i></button>
+                    <button id="tool-rotate" class="tool-btn" title="Rotate (2)"><i class="fa-solid fa-rotate"></i></button>
+                    <button id="tool-scale" class="tool-btn" title="Scale (3)"><i class="fa-solid fa-up-right-and-down-left-from-center"></i></button>
+                </div>
+            <div class="controls" style="display: flex; align-items: center;">
+                <input type="file" id="file-open" style="display: none;" accept=".wdev">
+                <input type="file" id="file-model" style="display: none;" accept=".glb,.gltf,.obj">
+                <input type="file" id="file-texture" style="display: none;" accept="image/*">
+                <button id="btn-open" class="btn-primary" style="margin-right: 5px; background-color: var(--item-bg); color: white;" title="Open Project"><i class="fa-solid fa-folder-open"></i> Open</button>
+                <button id="btn-save" class="btn-primary" style="margin-right: 10px; background-color: var(--item-bg); color: white;" title="Save Project"><i class="fa-solid fa-floppy-disk"></i> Save</button>
+                <button id="btn-export" class="btn-primary" style="margin-right: 15px; background-color: var(--hover-bg);"><i class="fa-solid fa-gamepad"></i> Export</button>
+                <button id="btn-play" class="btn-play"><i class="fa-solid fa-play"></i> Preview</button>
+                <button id="btn-stop" class="btn-stop" style="display: none;"><i class="fa-solid fa-stop"></i> Stop</button>
+            </div>
+        </header>
+
+        <div class="main-workspace">
+            <aside class="panel left-panel">
+                <div class="panel-header">
+                    <h3>Objects</h3>
+                    <div class="dropdown">
+                        <button id="btn-add-object" class="icon-btn"><i class="fa-solid fa-plus"></i></button>
+                        <div class="dropdown-content" id="add-menu">
+                            <button class="add-item" data-type="box"><i class="fa-solid fa-cube"></i> Box</button>
+                            <button class="add-item" data-type="sphere"><i class="fa-solid fa-circle"></i> Sphere</button>
+                            <button class="add-item" data-type="plane"><i class="fa-regular fa-square"></i> Plane</button>
+                            <button class="add-item" data-type="light"><i class="fa-solid fa-lightbulb"></i> Point Light</button>
+                            <button class="add-item" data-type="camera"><i class="fa-solid fa-video"></i> Camera</button>
+                            <hr style="border-color:var(--border-color); margin: 5px 0;">
+                            <button class="add-item" data-type="model"><i class="fa-solid fa-file-import"></i> 3D Model (.glb)</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="object-list" id="object-list">
+                    <!-- Objects -->
+                </div>
+            </aside>
+
+            <main class="center-panel">
+                <div id="view-scene" class="view active">
+                    <canvas id="renderCanvas"></canvas>
+                </div>
+                
+                <div id="view-events" class="view" style="display: none; background: var(--bg-color);">
+                    <div class="events-toolbar">
+                        <button id="btn-add-event" class="btn-primary"><i class="fa-solid fa-plus"></i> Add Event Block</button>
+                    </div>
+                    <div class="events-container" id="events-list">
+                        <!-- Events -->
+                    </div>
+                </div>
+
+                <div id="view-settings" class="view" style="display: none; padding: 20px; overflow-y: auto;">
+                    <h2>Graphics & Shaders (Post-Processing)</h2>
+                    <p style="color: var(--text-muted); margin-bottom: 20px;">These settings apply to the game view.</p>
+                    
+                    <div class="settings-group">
+                        <label><input type="checkbox" id="set-msaa" checked> Anti-Aliasing (MSAA x4)</label>
+                        <p style="font-size:0.8rem; color:var(--text-muted);">Smooths jagged edges on 3D models.</p>
+                    </div>
+                    
+                    <div class="settings-group">
+                        <label><input type="checkbox" id="set-bloom"> Enable Bloom (Glow Effect)</label>
+                        <div style="margin-left: 25px; margin-top: 10px;">
+                            <label style="font-size:0.9rem;">Intensity</label>
+                            <input type="range" id="set-bloom-weight" min="0" max="1" step="0.1" value="0.5" style="width: 200px; display:block; margin-bottom:10px;">
+                            
+                            <label style="font-size:0.9rem;">Threshold</label>
+                            <input type="range" id="set-bloom-threshold" min="0" max="1" step="0.1" value="0.8" style="width: 200px; display:block;">
+                        </div>
+                    </div>
+                    
+                    <div class="settings-group">
+                        <label>Global Exposure (Brightness)</label>
+                        <input type="range" id="set-exposure" min="0" max="3" step="0.1" value="1.0" style="width: 100%;">
+                        <p style="font-size:0.8rem; color:var(--text-muted); margin-top:5px;">Controls overall lighting realism.</p>
+                    </div>
+                </div>
+                <div id="view-extensions" class="view" style="display: none; padding: 20px; overflow-y: auto;">
+                    <h2 style="margin-bottom: 15px;">Editor Extensions</h2>
+                <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom: 10px;">Write custom JavaScript to extend the editor itself. Add new tools, panels, or modify the editor's global variables. Extensions are saved in your project file.</p>
+                
+                <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                    <button id="btn-add-extension" class="btn-primary"><i class="fa-solid fa-plus"></i> Create Extension</button>
+                    <button id="btn-import-extension" class="btn-primary" style="background-color: var(--item-bg);"><i class="fa-solid fa-file-import"></i> Import (.wext)</button>
+                    <input type="file" id="file-ext-import" style="display:none;" accept=".wext">
+                </div>
+                
+                <div id="extensions-list" style="display:flex; flex-direction:column; gap:15px;"></div>
+                </div>
+            </main>
+
+            <aside class="panel right-panel">
+                <div class="panel-header">
+                    <h3>Properties</h3>
+                </div>
+                <div class="properties-content" id="properties-panel">
+                    <div class="empty-state">Select an object to edit properties</div>
+                </div>
+            </aside>
+        </div>
+    </div>
+
+    <!-- Modal for Logic editing -->
+    <div id="logic-modal" class="modal" style="display:none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-title">Select Action</h3>
+                <button class="icon-btn" onclick="closeModal()"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div id="modal-body" class="modal-body">
+                <!-- dynamic content -->
+            </div>
+            <div class="modal-footer" id="modal-footer" style="display:none; padding:15px; border-top:1px solid var(--border-color); text-align:right;">
+                <button class="btn-primary" onclick="saveLogicItem()">Apply</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/globals.js"></script>
+    <script src="js/engine.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/editor.js"></script>
+    <script src="js/logic.js"></script>
+    <script src="js/io.js"></script>
+</body>
+</html>
+

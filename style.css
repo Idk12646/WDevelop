@@ -1,0 +1,403 @@
+:root {
+    --bg-color: #1e1e24;
+    --panel-bg: #2b2b36;
+    --item-bg: #383844;
+    --hover-bg: #454555;
+    --primary-color: #6366f1;
+    --primary-hover: #4f46e5;
+    --text-color: #f3f4f6;
+    --text-muted: #9ca3af;
+    --border-color: #4b5563;
+    --danger-color: #ef4444;
+    --success-color: #10b981;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    overflow: hidden;
+}
+
+#app {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+.topbar {
+    height: 50px;
+    background-color: var(--panel-bg);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.logo {
+    font-weight: 700;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--primary-color);
+}
+
+.tabs {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.tools-bar {
+    display: flex;
+    gap: 5px;
+    padding-left: 15px;
+    margin-left: 10px;
+    border-left: 1px solid var(--border-color);
+}
+
+.tool-btn {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 8px 10px;
+    border-radius: 4px;
+    transition: 0.2s;
+    font-size: 1rem;
+}
+
+.tool-btn:hover {
+    color: var(--text-color);
+    background-color: var(--hover-bg);
+}
+
+.tool-btn.active {
+    color: var(--primary-color);
+    background-color: rgba(99, 102, 241, 0.2);
+}
+
+.tab {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+.tab:hover {
+    color: var(--text-color);
+    background-color: var(--hover-bg);
+}
+
+.tab.active {
+    color: #fff;
+    background-color: var(--primary-color);
+}
+
+.btn-play, .btn-stop, .btn-primary {
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: white;
+    transition: 0.2s;
+}
+
+.btn-play, .btn-primary {
+    background-color: var(--primary-color);
+}
+.btn-play:hover, .btn-primary:hover {
+    background-color: var(--primary-hover);
+}
+
+.btn-stop {
+    background-color: var(--danger-color);
+}
+.btn-stop:hover {
+    background-color: #dc2626;
+}
+
+.main-workspace {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+}
+
+.panel {
+    width: 280px;
+    background-color: var(--panel-bg);
+    border-right: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+}
+
+.right-panel {
+    border-right: none;
+    border-left: 1px solid var(--border-color);
+}
+
+.panel-header {
+    padding: 15px;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.panel-header h3 {
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.icon-btn {
+    background: none;
+    border: none;
+    color: var(--text-color);
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 4px;
+    transition: 0.2s;
+}
+.icon-btn:hover {
+    background-color: var(--hover-bg);
+}
+
+.center-panel {
+    flex: 1;
+    position: relative;
+    background-color: var(--bg-color);
+}
+
+#renderCanvas {
+    width: 100%;
+    height: 100%;
+    outline: none;
+}
+
+.view {
+    width: 100%;
+    height: 100%;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+.dropdown-content {
+    display: none;
+    position: absolute;
+    right: 0;
+    background-color: var(--item-bg);
+    min-width: 140px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.5);
+    z-index: 100;
+    border-radius: 6px;
+    border: 1px solid var(--border-color);
+}
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+.add-item {
+    background: none;
+    border: none;
+    color: white;
+    padding: 10px 15px;
+    text-align: left;
+    width: 100%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.add-item:hover {
+    background-color: var(--hover-bg);
+}
+
+.object-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 10px;
+}
+.object-item {
+    padding: 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-bottom: 5px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: 0.2s;
+}
+.object-item:hover {
+    background-color: var(--item-bg);
+}
+.object-item.selected {
+    background-color: var(--primary-color);
+}
+
+.properties-content {
+    padding: 15px;
+    flex: 1;
+    overflow-y: auto;
+}
+.empty-state {
+    color: var(--text-muted);
+    text-align: center;
+    margin-top: 20px;
+    font-size: 0.9rem;
+}
+
+.prop-group {
+    margin-bottom: 15px;
+    background-color: var(--item-bg);
+    padding: 10px;
+    border-radius: 6px;
+}
+.prop-group label {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+.prop-row {
+    display: flex;
+    gap: 5px;
+    margin-bottom: 5px;
+}
+.prop-input-wrap {
+    display: flex;
+    align-items: center;
+    background-color: var(--bg-color);
+    border-radius: 4px;
+    padding: 2px 5px;
+    flex: 1;
+}
+.prop-input-wrap span {
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    margin-right: 5px;
+}
+.prop-input-wrap input {
+    background: none;
+    border: none;
+    color: white;
+    width: 100%;
+    font-family: monospace;
+    font-size: 0.9rem;
+    outline: none;
+}
+
+/* GDevelop Event Blocks */
+.gd-event {
+    display: flex;
+    background-color: var(--panel-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    margin-bottom: 15px;
+    overflow: hidden;
+}
+.gd-event-header {
+    width: 30px;
+    background-color: var(--item-bg);
+    border-right: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    cursor: pointer;
+}
+.gd-event-header:hover { color: var(--danger-color); }
+.gd-conditions {
+    flex: 1;
+    border-right: 1px solid var(--border-color);
+    padding: 10px;
+}
+.gd-actions {
+    flex: 1;
+    padding: 10px;
+}
+.gd-item {
+    background-color: var(--bg-color);
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    margin-bottom: 5px;
+    border-left: 3px solid var(--primary-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.gd-actions .gd-item {
+    border-left-color: var(--success-color);
+}
+.gd-add-btn {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    cursor: pointer;
+    padding: 5px;
+    width: 100%;
+    text-align: left;
+    margin-top: 5px;
+}
+.gd-add-btn:hover {
+    color: var(--text-color);
+}
+
+/* Modals */
+.modal {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.6); z-index: 1000;
+    display: flex; align-items: center; justify-content: center;
+}
+.modal-content {
+    background: var(--panel-bg); border-radius: 8px; width: 400px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+}
+.modal-header {
+    padding: 15px; border-bottom: 1px solid var(--border-color);
+    display: flex; justify-content: space-between; align-items: center;
+}
+.modal-header h3 { font-size: 1rem; margin: 0; }
+.modal-body { padding: 15px; max-height: 400px; overflow-y: auto; }
+.menu-item {
+    padding: 12px; background: var(--bg-color); margin-bottom: 8px;
+    border-radius: 4px; cursor: pointer; border: 1px solid transparent;
+    transition: 0.2s; font-size: 0.9rem;
+}
+.menu-item:hover { border-color: var(--primary-color); }
+
+/* Settings */
+.settings-group { 
+    margin-bottom: 20px; 
+    background: var(--panel-bg); 
+    padding: 20px; 
+    border-radius: 8px; 
+    border: 1px solid var(--border-color);
+}
+.settings-group label { 
+    display: flex; 
+    align-items: center; 
+    gap: 10px; 
+    font-weight: 600; 
+}
